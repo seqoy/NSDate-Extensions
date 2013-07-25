@@ -7,9 +7,9 @@
 #import <Foundation/Foundation.h>
 
 #define D_MINUTE	60
-#define D_HOUR		3600
-#define D_DAY		86400
-#define D_WEEK		604800
+#define D_HOUR		60*D_MINUTE
+#define D_DAY		24*D_HOUR
+#define D_WEEK		7*D_DAY
 #define D_YEAR		31556926
 
 @interface NSDate (Utilities)
@@ -56,6 +56,15 @@
 - (NSDate *) dateByAddingMinutes: (NSInteger) dMinutes;
 - (NSDate *) dateBySubtractingMinutes: (NSInteger) dMinutes;
 - (NSDate *) dateAtStartOfDay;
+
+// Setting components.
+- (NSDate*) setMinute:(NSInteger)minute;
+- (NSDate*) setHour:(NSInteger)hour;
+- (NSDate*) setHour:(NSInteger)hour andMinute:(NSInteger)minute;
+- (NSDate*) setSecond:(NSInteger)second;
+- (NSDate*) setMonth:(NSInteger)month;
+- (NSDate*) setDay:(NSInteger)day;
+- (NSDate*) setYear:(NSInteger)year;
 
 // Retrieving intervals
 - (NSInteger) minutesAfterDate: (NSDate *) aDate;

@@ -43,32 +43,23 @@
 
 + (NSDate *) dateWithHoursFromNow: (NSInteger) dHours
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_HOUR * dHours;
-	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
-	return newDate;	
+    return [[NSDate date] dateByAddingHours:dHours];
 }
 
 + (NSDate *) dateWithHoursBeforeNow: (NSInteger) dHours
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] - D_HOUR * dHours;
-	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
-	return newDate;	
+    return [[NSDate date] dateBySubtractingHours:dHours];
 }
 
 + (NSDate *) dateWithMinutesFromNow: (NSInteger) dMinutes
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] + D_MINUTE * dMinutes;
-	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
-	return newDate;		
+    return [[NSDate date] dateByAddingMinutes:dMinutes];
 }
 
 + (NSDate *) dateWithMinutesBeforeNow: (NSInteger) dMinutes
 {
-	NSTimeInterval aTimeInterval = [[NSDate date] timeIntervalSinceReferenceDate] - D_MINUTE * dMinutes;
-	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
-	return newDate;		
+    return [[NSDate date] dateBySubtractingMinutes:dMinutes];
 }
-
 #pragma mark Comparing Dates
 
 - (BOOL) isEqualToDateIgnoringTime: (NSDate *) aDate
@@ -212,9 +203,7 @@
 
 - (NSDate *) dateByAddingDays: (NSInteger) dDays
 {
-	NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + D_DAY * dDays;
-	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
-	return newDate;		
+    return [self dateByAddingTimeInterval:dDays * D_DAY];
 }
 
 - (NSDate *) dateBySubtractingDays: (NSInteger) dDays
@@ -222,12 +211,6 @@
 	return [self dateByAddingDays: (dDays * -1)];
 }
 
-- (NSDate *) dateByAddingHours: (NSInteger) dHours
-{
-	NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + D_HOUR * dHours;
-	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
-	return newDate;		
-}
 
 - (NSDate *) dateBySubtractingHours: (NSInteger) dHours
 {
@@ -236,14 +219,17 @@
 
 - (NSDate *) dateByAddingMinutes: (NSInteger) dMinutes
 {
-	NSTimeInterval aTimeInterval = [self timeIntervalSinceReferenceDate] + D_MINUTE * dMinutes;
-	NSDate *newDate = [NSDate dateWithTimeIntervalSinceReferenceDate:aTimeInterval];
-	return newDate;			
+	return [self dateByAddingTimeInterval:dMinutes * D_MINUTE];
 }
 
 - (NSDate *) dateBySubtractingMinutes: (NSInteger) dMinutes
 {
 	return [self dateByAddingMinutes: (dMinutes * -1)];
+}
+
+- (NSDate *) dateByAddingHours: (NSInteger) dHours
+{
+    return [self dateByAddingTimeInterval:dHours * D_HOUR];
 }
 
 - (NSDate *) dateAtStartOfDay
@@ -306,6 +292,48 @@
     NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *components = [gregorianCalendar components:NSDayCalendarUnit fromDate:self toDate:anotherDate options:0];
     return components.day;
+}
+
+
+#pragma mark Setting Components
+-(NSDate*)setMinute:(NSInteger)minute {
+    NSDateComponents *components = [CURRENT_CALENDAR components:DATE_COMPONENTS fromDate:self];
+    [components setMinute:minute];
+    return [CURRENT_CALENDAR dateFromComponents:components];
+}
+
+- (NSDate*) setHour:(NSInteger)hour {
+    NSDateComponents *components = [CURRENT_CALENDAR components:DATE_COMPONENTS fromDate:self];
+    [components setHour:hour];
+    return [CURRENT_CALENDAR dateFromComponents:components];
+}
+
+- (NSDate*) setHour:(NSInteger)hour andMinute:(NSInteger)minute {
+    NSDate *newDate = [self setHour:hour];
+    newDate = [newDate setMinute:minute];
+    return newDate;
+}
+
+- (NSDate*) setSecond:(NSInteger)second {
+    NSDateComponents *components = [CURRENT_CALENDAR components:DATE_COMPONENTS fromDate:self];
+    [components setSecond:second];
+    return [CURRENT_CALENDAR dateFromComponents:components];
+}
+
+- (NSDate*) setMonth:(NSInteger)month {
+    NSDateComponents *components = [CURRENT_CALENDAR components:DATE_COMPONENTS fromDate:self];
+    [components setMonth:month];
+    return [CURRENT_CALENDAR dateFromComponents:components];
+}
+- (NSDate*) setDay:(NSInteger)day {
+    NSDateComponents *components = [CURRENT_CALENDAR components:DATE_COMPONENTS fromDate:self];
+    [components setDay:day];
+    return [CURRENT_CALENDAR dateFromComponents:components];
+}
+- (NSDate*) setYear:(NSInteger)year {
+    NSDateComponents *components = [CURRENT_CALENDAR components:DATE_COMPONENTS fromDate:self];
+    [components setYear:year];
+    return [CURRENT_CALENDAR dateFromComponents:components];
 }
 
 #pragma mark Decomposing Dates
